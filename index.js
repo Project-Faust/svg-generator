@@ -60,7 +60,9 @@ const questions = [
 
 async function shapePrompt() {
     try {
+        // assign responses to prompts in userInput
         const userInput = await inquirer.prompt(questions);
+        // assign object created in generateLogo function to svgCreate variable
         const svgCreate = generateLogo(userInput);
         await writeToFile(svgCreate);
     } catch (err) {
@@ -83,7 +85,8 @@ async function shapePrompt() {
 
         // creates file
         try {
-            await writeFile(filePath, svgCreate);
+            // call render method on returned shape object to return .svg string
+            await writeFile(filePath, svgCreate.render());
             console.log(`Your logo has been created and has been saved to ${filePath}.`);
         } catch (err) {
             console.error(err);
