@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { writeFile } = require('fs').promises;
 const inquirer = require('inquirer');
+const SVG = require('svg.js');
 
 const generateLogo = require('./lib/generateLogo.js');
 
@@ -60,11 +61,8 @@ const questions = [
 async function shapePrompt() {
     try {
         const userInput = await inquirer.prompt(questions);
-        console.log(userInput);
         const svgCreate = generateLogo(userInput);
-        console.log(svgCreate);
-        writeToFile(svgCreate);
-        // const svgCreate = await writeToFile(svgParams);
+        await writeToFile(svgCreate);
     } catch (err) {
         console.error(err);
     }
@@ -81,15 +79,15 @@ async function shapePrompt() {
         while (fs.existsSync(filePath)) {
             counter++;
             filePath = `${directory}/${fileName}` + `${counter}.${extension}`;
-            // creates file
-            try {
-                await writeFile(filePath, svgCreate);
-                console.log(`Your logo has been created and has been saved to ${filePath}.`);
-            } catch (err) {
-                console.error(err);
-            }
         }
 
+        // creates file
+        try {
+            await writeFile(filePath, svgCreate);
+            console.log(`Your logo has been created and has been saved to ${filePath}.`);
+        } catch (err) {
+            console.error(err);
+        }
     };
 };
 
