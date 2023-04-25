@@ -10,9 +10,9 @@ const questions = [
         message: 'Would you like a triangle, circle, or square?',
         type: 'list',
         choices: [
-            { name: 'Triangle', value: 'triangle' },
-            { name: 'Circle', value: 'circle' },
-            { name: 'Square', value: 'square' }
+            { name: 'Triangle', value: 'Triangle' },
+            { name: 'Circle', value: 'Circle' },
+            { name: 'Square', value: 'Square' }
         ]
     },
     {
@@ -59,15 +59,18 @@ const questions = [
 
 async function shapePrompt() {
     try {
-        const answers = await inquirer.prompt(questions);
-        const svgCreate = generateLogo(answers);
-        await writeToFile(svgCreate);
+        const userInput = await inquirer.prompt(questions);
+        console.log(userInput);
+        const svgCreate = generateLogo(userInput);
+        console.log(svgCreate);
+        writeToFile(svgCreate);
+        // const svgCreate = await writeToFile(svgParams);
     } catch (err) {
         console.error(err);
     }
 
     // creates a file at a predetermined path with a modular file name (see counter increment)
-    async function writeToFile() {
+    async function writeToFile(svgCreate) {
         const directory = "./examples";
         const fileName = "Generated Logo";
         const extension = "svg"
@@ -78,15 +81,15 @@ async function shapePrompt() {
         while (fs.existsSync(filePath)) {
             counter++;
             filePath = `${directory}/${fileName}` + `${counter}.${extension}`;
+            // creates file
+            try {
+                await writeFile(filePath, svgCreate);
+                console.log(`Your logo has been created and has been saved to ${filePath}.`);
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-        // creates file
-        try {
-            await writeFile(filePath, svgCreate);
-            console.log(`Your logo has been created and has been saved to ${filePath}.`);
-        } catch (err) {
-            console.error(err);
-        }
     };
 };
 
